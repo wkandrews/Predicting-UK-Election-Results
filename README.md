@@ -3,9 +3,6 @@
 ## Executive Summary
 In June 2025, YouGov projected over 300 seats could ‘swing’ at the next UK General Election, surpassing 2024 levels. This project explored an alternative approach to YouGov’s MRP, instead opting to use Logistic Regression. Data extracted from the House of Commons Library (HOCL), Office for National Statistics (ONS) and YouGov was used to produce a Logistic Regression model capable of predicting probabilities of each English constituency 'swinging' to a new party at the next election. Whilst the target was to achieve 85% Precision, the best model achieved 54%, predicting 415 ‘Hold’ and 128 ‘Swing’ seats (~172 below YouGov). Results were mapped geospatially, providing constituency-level visualisation accessible via this repository. This project was severely hampered by the class imbalance within the dataset and the magnitude of swing at the 2024 election. Future iterations of this project should focus on utilising a classification technique capabale of handling severe class imbalance.
 
-
-
-
 ## Data Engineering
 Due to extraction limitations on the HOCL and ONS websites, each of the electoral and demographic datasets were extracted on an individual basis, resulting in the extraction of 17 standalone datasets. As such, PowerQuery was selected to complete the bulk of data engineering tasks within this project based on user competence. All datasets were cleaned, transformed and merged into a master dataset. The diagram below provides a high-level summary of the project's ETL pipeline:
 <br>
@@ -39,7 +36,7 @@ Further EDA was conducted using the SweetViz API and allowed the project to anal
 <br>
 <br>
 <br>
-Correlation analysis revealed strong correlation between several features and suggested potential multicollinearity amongst within the training set. 
+Correlation analysis revealed strong correlation between several features and suggested potential multicollinearity within the training set. 
 <br>
 <br>
 <br>
@@ -48,7 +45,7 @@ Correlation analysis revealed strong correlation between several features and su
 <br>
 <br>
 ## Data Preprocessing
-After consideration the potential effect of multicollinearity on model performance, the features listed in the code below were excluded from the training and test datasets; irrelevant and redundant features were also dropped at this stage.
+After considering the potential effect of multicollinearity on model performance, the features listed below were excluded from the training and test datasets; irrelevant and redundant features were also dropped at this stage.
 ```python
 train_data = train_data.drop(columns=['candidate', 'uk_turnout', 'party_colour',
                                       'winning_party', 'constituency', 'GlobalID', 
@@ -87,7 +84,7 @@ X_test[scale_columns] = scaler.fit_transform(X_test[scale_columns])
 
 ## Model Creation & Evaluation
 ### Baseline Model
-A baseline model using the 'balanced' class_weights feature to mitigate the class imbalance seen within the dataset and was used to make swing predictions and probabilities.
+A baseline model was created using the 'balanced' class_weights feature to mitigate the class imbalance seen within the dataset and was used to make swing predictions and probabilities.
 ``` python
 model_1 = LogisticRegression(max_iter=1000, class_weight='balanced', random_state=42)
 model_1.fit(X_train, y_train)
@@ -121,7 +118,7 @@ y_prob_2 = model_2.predict_proba(X_test)[:,1]
 ### Feature Engineered Iteration
 The results obtained from the SMOTE iteration indicated its model performance was below that of the baseline model and indicated feature selection could be influencing the model. 
 
-As such, feature importance analysis was conducted by extracting feature coefficients and exponentiating to obtain the odds ratios. To enhance the importance analysis, Recursive Feature Elimation using Stratified K-fold (RFECV) was used alongside interpretting Log-Odds.
+As such, feature importance analysis was conducted by extracting feature coefficients and exponentiating to obtain the odds Odds. To enhance the importance analysis, Recursive Feature Elimation using Stratified K-fold (RFECV) was used alongside interpretting Log-Odds.
 
 ```python
 # Extract Coefficients and Exponents
@@ -150,7 +147,7 @@ model_3.fit(X_train_3, y_train)
 
 ![Model 3](screenshots/model_3_results.PNG)
 
-As seen in the confusion matrix and ROC curve, no further improvement was made to model performance. As such, a final iteration using GridSearchCV was created, however model evaluation revealed no significant improvement to model performance.
+As seen in the confusion matrix and ROC curve, no further improvement was made to model performance. As such, a final iteration using GridSearchCV was created; however, model evaluation revealed no significant improvement to model performance.
 
 ```python
 # Set the grid parameters:
@@ -183,7 +180,7 @@ This map can be viewed using this link:
 [View Interactive Map]( https://wkandrews.github.io/Predicting-UK-Election-Results/visualisation_files/swing_map.html)
 
 ## Conclusion & Next Steps
-Model performance throughout this project demonstrated the class imbalance within the target feature significantly impacted LR’s ability to predict seat swing at the next GE. Whilst model performance was poor, this project achieved its primary objective and has created a framework for future project iterations to utilise. Its suggested future iterations should focus on using more appropriate classification techniques to handle the class imbalance and capable of integrating swing magnitude seen in the 2024 GE. 
+Model performance throughout this project demonstrated the class imbalance within the target feature significantly impacted Logistic Regressions ability to predict seat swing at the next GE. Whilst model performance was poor, this project achieved its primary objective and has created a framework for future project iterations to utilise. Its suggested future iterations should focus on using more appropriate classification techniques to handle the class imbalance and capable of integrating swing magnitude seen in the 2024 GE. 
 
 ## References & Data Sources
-[Reference List]( https://wkandrews.github.io/Predicting-UK-Election-Results/Reference List.pdf)
+Please refer to 'Reference List.pdf' within this repository.
