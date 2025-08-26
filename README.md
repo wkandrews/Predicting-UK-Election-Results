@@ -31,7 +31,7 @@ train_data = masterset[(masterset['election_year'] <= 2019)]
 test_data = masterset[masterset['election_year'] == 2024 ]
 ```
 ### SweetViz EDA
-Further EDA was conducted using the SweetViz API and allowed the project to analyse feature distrubiton, correlation and multicollinearity within the Training dataset. As shown in the outputs below, a severe 88% : 12% imbalance was found within the target 'swing' feature.
+Further EDA was conducted using the SweetViz API and allowed the project to analyse feature distrubiton, correlation and multicollinearity within the Training dataset. As shown in the output below, a severe 88% : 12% imbalance was found within the target 'swing' feature.
 <br>
 <br>
 <br>
@@ -39,13 +39,78 @@ Further EDA was conducted using the SweetViz API and allowed the project to anal
 <br>
 <br>
 <br>
+Correlation analysis revealed strong correlation between several features and suggested potential multicollinearity amongst within the training set. 
+<br>
+<br>
+<br>
+![Correlation Matrix](screenshots/correlation_matrix.PNG)
+<br>
+<br>
+<br>
+## Data Preprocessing
+After consideration the potential effect of multicollinearity on model performance, the features listed in the code below were excluded from the training and test datasets; irrelevant and redundant features were also dropped at this stage.
+```python
+train_data = train_data.drop(columns=['candidate', 'uk_turnout', 'party_colour',
+                                      'winning_party', 'constituency', 'GlobalID', 
+                                      'geometry', 'winning_vote_share'])
 
+test_data = test_data.drop(columns=['candidate', 'uk_turnout', 'party_colour',
+                                    'winning_party', 'constituency', 'GlobalID', 
+                                    'geometry', 'winning_vote_share'])
+```
+<br>
 
+In-line with Logistic Regression requirements, categorical features within the train and test sets were encoded to produce binary values for each.
 
+```python
+train_data = pd.get_dummies(train_data, columns=['prev_party', 'region'], drop_first=True)
+test_data = pd.get_dummies(test_data, columns=['prev_party', 'region'], drop_first=True)
+```
+X and Y Train & Test sets were created and the target feature 'swing' assigned to the Y data:
 
+```python
+X_train = train_data.drop(columns=['swing','constituency_code','election_year'])
+X_test = test_data.drop(columns=['swing','constituency_code','election_year'])
 
+y_train = train_data['swing']
+y_test = test_data['swing']
+```
+Considering the differing range of scales amongst demographic, economic and opinion data, the decision was taken to scale all numerical features to prevent features with large numerical values dominating the model. 
+
+``` python
+scaler = StandardScaler()
+scale_columns = X_train.select_dtypes(include=['int64', 'float64']).columns
+X_train[scale_columns] = scaler.fit_transform(X_train[scale_columns])
+X_test[scale_columns] = scaler.fit_transform(X_test[scale_columns])
+
+```
 
 ## Model Creation
+### Baseline Model
+A baseline model using the 'balanced' class_weights feature to mitigate the class imbalance seen within the dataset and was used to make swing predictions and probabilities.
+``` python
+model_1 = LogisticRegression(max_iter=1000, class_weight='balanced', random_state=42)
+model_1.fit(X_train, y_train)
+y_pred_1 = model_1.predict(X_test)
+y_prob_1 = model_1.predict_proba(X_test)[:,1]
+```
+Baseline model results were obtained using a classification report and indicated poor model performance, with Swing Precision scoring 0.54 and Recall of 0.32. An ROC curve further confirmed the poor performance.
+<br>
+![Model 1](screenshots/baseline_model_results.PNG)
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Model Evaluation
 Each Logistic Regression iteration was evaluated using 
