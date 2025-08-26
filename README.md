@@ -150,7 +150,7 @@ model_3.fit(X_train_3, y_train)
 
 ![Model 3](screenshots/model_3_results.PNG)
 
-As seen in the confusion matrix and ROC curve, no further improvement was made to model performance. As such, a final iteration using GridSearchCV was created, however model evaluation revealed no significant improvement to model performance either.
+As seen in the confusion matrix and ROC curve, no further improvement was made to model performance. As such, a final iteration using GridSearchCV was created, however model evaluation revealed no significant improvement to model performance.
 
 ```python
 # Set the grid parameters:
@@ -173,7 +173,7 @@ grid_search.fit(X_train, y_train)
 ```
 ![Model 4](screenshots/model_4_results.PNG)
 
-### Model Selection
+## Model Selection
 Despite the attempts to improve performance, the baseline model produced the most favourable results amongst model iterations. With the project objective in mind, the decision made to retrain the baseline model using the full master dataset and predict the probabilities of each English constituency swinging at the next General Election.
 
 ## Model Predictions
