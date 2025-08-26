@@ -134,28 +134,54 @@ rfecv = RFECV(estimator=model_1, step=1, cv= strat_kfold, scoring='roc_auc')
 rfecv.fit(X_train, y_train)
 ```
 <br>
+Analysis of feature importance indicated some redundant or irrelevant features. These features were eliminated and a third iteration trained and evaluated:
 
-![Feature Importance](screenshots/feature_importance.PNG)
+```python
+feature_drop = ['population_above_50', 'male', 'unemployed', 'tenure', 
+                'prev_party_GREEN', 'prev_party_KHHC', 'prev_party_RES', 'prev_party_UKIP' ,
+                'region_London' ,'region_South West']
 
+X_train_3 = X_train.drop(columns=feature_drop)
+X_test_3 = X_test.drop(columns=feature_drop)
 
+model_3 = LogisticRegression(max_iter=1000, class_weight = 'balanced', random_state=42)
+model_3.fit(X_train_3, y_train)
+```
 
+![Model 3](screenshots/model_3_results.PNG)
 
+As seen in the confusion matrix and ROC curve, no further improvement was made to model performance. As such, a final iteration using GridSearchCV was created, however model evaluation revealed no significant improvement to model performance either.
 
+```python
+# Set the grid parameters:
+grid_parameters = {
+    'C': [0.01, 0.1, 1, 10, 100],
+    'penalty': ['l1', 'l2'],
+    'solver': ['liblinear']}
 
+# Create the Gridsearch
+grid_search = GridSearchCV(
+    estimator= model_1,
+    param_grid= grid_parameters,
+    scoring='roc_auc',
+    cv= strat_kfold,
+    n_jobs= -1,
+    verbose= 1)
 
+# Train the model
+grid_search.fit(X_train, y_train)
+```
+![Model 4](screenshots/model_4_results.PNG)
 
-
-
-
-
-
-## Model Evaluation
-Each Logistic Regression iteration was evaluated using 
-
-
+### Model Selection
+Despite the attempts to improve performance, the baseline model produced the most favourable results amongst model iterations. With the project objective in mind, the decision made to retrain the baseline model using the full master dataset and predict the probabilities of each English constituency swinging at the next General Election.
 
 ## Model Predictions
-create link to plotly map
+Swing predictions and probabilites were visualised using a Choropleth Map in Plotly Express to create an interactive 'Swing Predictions Map'. 
+This map can be viewed using this link:
+
+
+Swing predictions and probabilities were created using the 'fully' trained baseline model. These predictions were mapped using Plotly Express to create an interactive Swing Predictions Map. 
 
 ## Conclusion & Next Steps
 Model performance throughout this project demonstrated the class imbalance within the target feature significantly impacted LR’s ability to predict seat swing at the next GE. Whilst model performance was poor, this project achieved its primary objective and has created a framework for future project iterations to utilise. Its suggested future iterations should focus on using more appropriate classification techniques to handle the class imbalance and capable of integrating swing magnitude seen in the 2024 GE. 
