@@ -85,7 +85,7 @@ X_test[scale_columns] = scaler.fit_transform(X_test[scale_columns])
 
 ```
 
-## Model Creation
+## Model Creation & Evaluation
 ### Baseline Model
 A baseline model using the 'balanced' class_weights feature to mitigate the class imbalance seen within the dataset and was used to make swing predictions and probabilities.
 ``` python
@@ -102,6 +102,7 @@ Baseline model results were obtained using a classification report and indicated
 <br>
 <br>
 <br>
+### SMOTE Iteration
 Considering the poor model performance, a second iteration utilised the SMOTE oversampling technique in an attempt to overcome the impact class imbalance was having upon the model. 
 <br>
 
@@ -116,8 +117,11 @@ y_prob_2 = model_2.predict_proba(X_test)[:,1]
 ![Model 2](screenshots/smote_model_results.PNG)
 
 <br>
-The results obtained from the SMOTE iteration indicated its model performance was below that of the baseline model and indicated feature selection could be influencing the model. Subsequent feature importance analysis was conducted by extracting feature coefficients and exponentiating to obtain the odds ratios. To enhance the importance analysis, Recursive Feature Elimation using Stratified K-fold (RFECV) was used alongside interpretting Log-Odds.
-<br>
+
+### Feature Engineered Iteration
+The results obtained from the SMOTE iteration indicated its model performance was below that of the baseline model and indicated feature selection could be influencing the model. 
+
+As such, feature importance analysis was conducted by extracting feature coefficients and exponentiating to obtain the odds ratios. To enhance the importance analysis, Recursive Feature Elimation using Stratified K-fold (RFECV) was used alongside interpretting Log-Odds.
 
 ```python
 # Extract Coefficients and Exponents
