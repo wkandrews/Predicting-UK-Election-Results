@@ -94,11 +94,44 @@ model_1.fit(X_train, y_train)
 y_pred_1 = model_1.predict(X_test)
 y_prob_1 = model_1.predict_proba(X_test)[:,1]
 ```
-Baseline model results were obtained using a classification report and indicated poor model performance, with Swing Precision scoring 0.54 and Recall of 0.32. An ROC curve further confirmed the poor performance.
+Baseline model results were obtained using a classification report and indicated poor model performance, with Swing Precision scoring 0.54 and Recall of 0.32; an ROC curve further confirmed the poor performance.
+<br>
+<br>
 <br>
 ![Model 1](screenshots/baseline_model_results.PNG)
 <br>
+<br>
+<br>
+Considering the poor model performance, a second iteration utilised the SMOTE oversampling technique in an attempt to overcome the impact class imbalance was having upon the model. 
+<br>
 
+```python
+smote = SMOTE()
+X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
+y_pred_2 = model_2.predict(X_test)
+y_prob_2 = model_2.predict_proba(X_test)[:,1]
+```
+<br>
+
+![Model 2](screenshots/smote_model_results.PNG)
+
+<br>
+The results obtained from the SMOTE iteration indicated its model performance was below that of the baseline model and indicated feature selection could be influencing the model. Subsequent feature importance analysis was conducted by extracting feature coefficients and exponentiating to obtain the odds ratios. To enhance the importance analysis, Recursive Feature Elimation using Stratified K-fold (RFECV) was used alongside interpretting Log-Odds.
+<br>
+
+```python
+# Extract Coefficients and Exponents
+model_1_coeff = model_1.coef_[0].round(2)
+model_1_exp = np.exp(model_1_coeff).round(2)
+
+# RFECV
+strat_kfold = StratifiedKFold(n_splits=5, shuffle=True)
+rfecv = RFECV(estimator=model_1, step=1, cv= strat_kfold, scoring='roc_auc')
+rfecv.fit(X_train, y_train)
+```
+<br>
+
+![Feature Importance](screenshots/feature_importance.PNG)
 
 
 
