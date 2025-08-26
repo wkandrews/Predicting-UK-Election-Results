@@ -179,7 +179,8 @@ Despite the attempts to improve performance, the baseline model produced the mos
 ## Model Predictions
 Swing predictions and probabilites were visualised using a Choropleth Map in Plotly Express to create an interactive 'Swing Predictions Map'. 
 This map can be viewed using this link:
-
+![Swing Map](visualisation_files/swing_map.html)
+[Download the interactive plot](visualisations/plot.html)
 
 Swing predictions and probabilities were created using the 'fully' trained baseline model. These predictions were mapped using Plotly Express to create an interactive Swing Predictions Map. 
 
