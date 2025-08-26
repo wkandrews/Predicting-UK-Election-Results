@@ -186,4 +186,4 @@ This map can be viewed using this link:
 Model performance throughout this project demonstrated the class imbalance within the target feature significantly impacted LR’s ability to predict seat swing at the next GE. Whilst model performance was poor, this project achieved its primary objective and has created a framework for future project iterations to utilise. Its suggested future iterations should focus on using more appropriate classification techniques to handle the class imbalance and capable of integrating swing magnitude seen in the 2024 GE. 
 
 ## References & Data Sources
-[Reference List]( https://wkandrews.github.io/Predicting-UK-Election-Results/Reference_list.pdf)
+[Reference List]( https://wkandrews.github.io/Predicting-UK-Election-Results/Reference List.pdf)
